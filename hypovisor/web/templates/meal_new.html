@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card narrow">
+  <h2>Log a meal</h2>
+  <form id="estimate-form">
+    <label class="photo-drop">
+      <input type="file" name="photo" accept="image/*" capture="environment" id="photo">
+      <span id="photo-label">📷 Take or choose a photo</span>
+      <img id="preview" alt="" hidden>
+    </label>
+    <textarea name="description" id="description" rows="2" placeholder="Describe it (optional): 'half a chipotle chicken bowl, no rice' or '45g carbs pizza'"></textarea>
+    <div class="row"><label>When <input type="datetime-local" name="local_ts" id="local_ts"></label></div>
+    <button type="submit" id="estimate-btn">Estimate</button>
+    <p class="muted small">The estimate is a starting point with a range, not a dose. You confirm or correct every number; corrections are remembered for next time.</p>
+  </form>
+  <div id="estimate-result" hidden></div>
+</section>
+{% endblock %}
+{% block scripts %}<script>HV.mealNew();</script>{% endblock %}

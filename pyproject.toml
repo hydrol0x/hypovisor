@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hypovisor"
+version = "0.1.0"
+description = "Personal T1D data platform: pump + CGM + food in one timeline, with pattern analysis."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = [
+    "fastapi>=0.110",
+    "uvicorn[standard]>=0.27",
+    "sqlalchemy>=2.0",
+    "pydantic>=2.5",
+    "jinja2>=3.1",
+    "python-multipart>=0.0.9",
+    "httpx>=0.27",
+    "numpy>=1.26",
+    "anthropic>=1.0",
+    "aiofiles>=23.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "pytest-asyncio>=0.23", "ruff>=0.4"]
+postgres = ["psycopg[binary]>=3.1"]
+
+[project.scripts]
+hypovisor = "hypovisor.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["hypovisor*"]
+
+[tool.setuptools.package-data]
+hypovisor = ["web/templates/*.html", "web/static/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = ["E501", "B008", "B023", "UP017"]

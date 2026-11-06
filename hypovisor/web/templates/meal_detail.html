@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card" id="meal" data-id="{{ meal_id }}">
+  <div class="card-head"><h2 id="title">Meal</h2><span id="score" class="pill"></span></div>
+  <div class="two">
+    <div>
+      <img id="photo" class="meal-photo" alt="" hidden>
+      <div id="macros" class="metrics-row"></div>
+      <h3>Items</h3><div id="items"></div>
+      <h3>Insulin context</h3><div id="insulin" class="kv"></div>
+      <div class="row"><button id="recompute">Recompute response</button> <button id="delete" class="danger">Delete meal</button></div>
+    </div>
+    <div>
+      <h3>Glucose response (0–6 h)</h3>
+      <canvas id="response-chart" height="180"></canvas>
+      <div id="response" class="kv"></div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}<script>HV.mealDetail();</script>{% endblock %}

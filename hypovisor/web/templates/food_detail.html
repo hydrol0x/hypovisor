@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card" id="food" data-id="{{ food_id }}">
+  <div class="card-head"><h2 id="title">Food</h2><span id="summary" class="muted"></span></div>
+  <form id="food-edit" class="inline-form">
+    <input name="name" placeholder="name"><input name="serving_desc" placeholder="serving">
+    <input name="carbs_g" type="number" step="0.1" placeholder="carbs g"><input name="fat_g" type="number" step="0.1" placeholder="fat g">
+    <input name="protein_g" type="number" step="0.1" placeholder="protein g"><input name="fiber_g" type="number" step="0.1" placeholder="fiber g">
+    <button>Save</button></form>
+  <div class="two">
+    <div><h3>What has worked</h3><p class="muted small">Outcomes grouped by bolus size and pre-bolus lead. History, not a recommendation.</p>
+      <table class="table" id="bolus-table"><thead><tr><th>Bolus</th><th>Pre-bolus</th><th>n</th><th>🟢</th><th>🟡</th><th>🔴</th><th>Lows</th><th>Median peak</th><th>Δ2h</th><th>IOB</th></tr></thead><tbody></tbody></table></div>
+    <div><h3>Overlaid responses</h3><canvas id="overlay-chart" height="200"></canvas></div>
+  </div>
+  <h3>Every time</h3>
+  <table class="table" id="meal-table"><thead><tr><th>When</th><th>Carbs</th><th>Bolus</th><th>Pre</th><th>IOB</th><th>Baseline</th><th>Peak</th><th>Δ2h</th><th>TIR 6h</th><th>Score</th></tr></thead><tbody></tbody></table>
+</section>
+{% endblock %}
+{% block scripts %}<script>HV.foodDetail();</script>{% endblock %}

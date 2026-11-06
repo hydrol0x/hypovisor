@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{% block title %}Hypovisor{% endblock %}</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/static/icon.svg">
+<link rel="stylesheet" href="/static/style.css">
+<script src="/static/chart.umd.js"></script>
+<script src="/static/chartjs-adapter-date-fns.bundle.min.js"></script>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="/">hypovisor</a>
+  <nav>
+    <a href="/" class="{{ 'active' if page == 'dashboard' }}">Today</a>
+    <a href="/timeline" class="{{ 'active' if page == 'timeline' }}">Timeline</a>
+    <a href="/meals" class="{{ 'active' if page in ('meals','meal_detail') }}">Meals</a>
+    <a href="/foods" class="{{ 'active' if page in ('foods','food_detail') }}">Foods</a>
+    <a href="/insights" class="{{ 'active' if page == 'insights' }}">Insights</a>
+    <a href="/import" class="{{ 'active' if page == 'import' }}">Import</a>
+  </nav>
+  <a class="cta" href="/meals/new">+ Log meal</a>
+</header>
+<main>
+{% block content %}{% endblock %}
+</main>
+<footer class="foot">Hypovisor shows your own history. It is not a bolus calculator and does not recommend doses. Targets {{ settings.target_low|int }}–{{ settings.target_high|int }} mg/dL · timezone {{ settings.timezone }}</footer>
+<script src="/static/app.js"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

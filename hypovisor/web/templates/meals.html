@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card"><div class="card-head"><h2>Meals</h2><a class="cta" href="/meals/new">+ Log meal</a></div>
+<div id="meal-list" class="meal-list"></div></section>
+{% endblock %}
+{% block scripts %}<script>HV.mealList();</script>{% endblock %}

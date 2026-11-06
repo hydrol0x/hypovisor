@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+  <div class="card-head"><h2 id="day-title">Timeline</h2>
+    <div><a id="prev" href="#">‹</a> <input type="date" id="day" value="{{ day }}"> <a id="next" href="#">›</a></div></div>
+  <canvas id="timeline-chart" height="140"></canvas>
+  <div id="day-metrics" class="metrics-row"></div>
+</section>
+<section class="two">
+  <div class="card"><h3>Boluses</h3><div id="boluses"></div></div>
+  <div class="card"><h3>Meals &amp; events</h3><div id="meals"></div>
+    <details><summary>Add an event (site change, sensor start, exercise…)</summary>
+      <form id="event-form" class="inline-form">
+        <input type="datetime-local" name="local_ts" required>
+        <select name="kind"><option>site_change</option><option>sensor_start</option><option>cartridge_change</option><option>exercise</option><option>illness</option><option>note</option></select>
+        <input type="text" name="notes" placeholder="notes">
+        <button>Save</button>
+      </form></details>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}<script>HV.timeline();</script>{% endblock %}

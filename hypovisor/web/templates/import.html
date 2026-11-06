@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="two">
+  <div class="card"><h2>Dexcom Clarity CSV</h2>
+    <p class="small muted">clarity.dexcom.com → Reports → export icon. Any language, comma or semicolon. Timestamps are treated as {{ settings.timezone }}.</p>
+    <form class="upload" data-url="/api/import/clarity"><input type="file" name="file" accept=".csv" required><button>Import</button></form></div>
+  <div class="card"><h2>Tandem Source export</h2>
+    <p class="small muted">source.tandemdiabetes.com → Reports → export CSV. Upload the zip, or the folder's Bolus / Basal-doses / CGM / BG CSVs one at a time.</p>
+    <form class="upload" data-url="/api/import/tandem"><input type="file" name="file" accept=".zip,.csv" required><button>Import</button></form></div>
+</section>
+<section class="card"><h3>Import log</h3><div id="import-log"></div></section>
+<section class="card"><h3>Sync (optional)</h3>
+  <p class="small muted">Nightscout (API v3) pull and the Dexcom Developer API are available via <code>/api/sync/*</code> when configured in <code>.env</code>. Both are retrospective; see README.</p>
+  <button id="ns-sync">Pull from Nightscout</button> <span id="sync-result" class="small"></span></section>
+{% endblock %}
+{% block scripts %}<script>HV.importPage();</script>{% endblock %}

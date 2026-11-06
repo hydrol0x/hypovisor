@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card"><div class="card-head"><h2>Insights</h2><label>Window <select id="days"><option>14</option><option selected>30</option><option>90</option><option>180</option></select> days</label></div>
+<div id="overall" class="metrics-row"></div></section>
+<section class="two">
+  <div class="card"><h3>Glucose by hour of day (median, 25–75%, 5–95%)</h3><canvas id="hourly-chart" height="200"></canvas><div id="overnight" class="muted small"></div></div>
+  <div class="card"><h3>Daily TIR</h3><canvas id="daily-chart" height="200"></canvas></div>
+</section>
+<section class="two">
+  <div class="card"><h3>Meals by slot</h3><table class="table" id="slot-table"><thead><tr><th>Slot</th><th>n</th><th>% green</th><th>% red</th></tr></thead><tbody></tbody></table>
+    <h3>Day of week</h3><table class="table" id="dow-table"><thead><tr><th>Day</th><th>Mean</th><th>TIR</th><th>TBR</th></tr></thead><tbody></tbody></table></div>
+  <div class="card"><h3>Foods</h3><table class="table" id="food-table"><thead><tr><th>Food</th><th>n</th><th>🟢</th><th>🟡</th><th>🔴</th><th>Median peak</th></tr></thead><tbody></tbody></table></div>
+</section>
+<section class="two">
+  <div class="card"><h3>Observed sensitivity (correction boluses)</h3><p class="muted small">Glucose drop per unit over 3 h after corrections with no carbs. Compare with the pump's correction factor.</p>
+    <table class="table" id="isf-table"><thead><tr><th>Time</th><th>n</th><th>Observed</th><th>Pump ISF</th></tr></thead><tbody></tbody></table>
+    <h3>Observed carb ratio</h3><p class="muted small">Meals that returned to baseline by 4 h without a low.</p>
+    <table class="table" id="icr-table"><thead><tr><th>Slot</th><th>n</th><th>Well covered</th><th>Observed ICR</th><th>Pump ICR</th><th>Under</th><th>Over</th></tr></thead><tbody></tbody></table></div>
+  <div class="card"><h3>Fasting drift by hour (no IOB, no meal 4 h)</h3><p class="muted small">Consistent positive drift suggests basal may be low in that hour; negative suggests high. Small-step changes only, with your clinician.</p><canvas id="drift-chart" height="200"></canvas>
+    <h3>Site / sensor lifecycle</h3><canvas id="lifecycle-chart" height="160"></canvas></div>
+</section>
+{% endblock %}
+{% block scripts %}<script>HV.insights();</script>{% endblock %}

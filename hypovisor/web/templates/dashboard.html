@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="grid stats" id="stats">
+  <div class="stat"><div class="label">Latest</div><div class="value" id="latest">–</div><div class="sub" id="latest-ts"></div></div>
+  <div class="stat"><div class="label">Bolus IOB now</div><div class="value" id="iob">–</div><div class="sub">exponential model</div></div>
+  <div class="stat"><div class="label">TIR today</div><div class="value" id="tir">–</div><div class="sub" id="tir-sub"></div></div>
+  <div class="stat"><div class="label">Insulin today</div><div class="value" id="insulin">–</div><div class="sub" id="insulin-sub"></div></div>
+</section>
+<section class="card">
+  <div class="card-head"><h2 id="day-title">Today</h2><div><a id="prev" href="#">‹</a> <a id="next" href="#">›</a></div></div>
+  <canvas id="timeline-chart" height="130"></canvas>
+  <div class="legend">glucose · <span class="dot bolus"></span> bolus · <span class="dot basal"></span> basal U/h · <span class="dot meal"></span> meal</div>
+</section>
+<section class="two">
+  <div class="card"><h3>Meals today</h3><div id="meals"></div></div>
+  <div class="card"><h3>Last 14 days</h3><canvas id="daily-chart" height="160"></canvas></div>
+</section>
+{% endblock %}
+{% block scripts %}<script>HV.dashboard();</script>{% endblock %}

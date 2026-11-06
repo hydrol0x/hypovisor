@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card"><div class="card-head"><h2>Your foods</h2><input id="food-search" type="search" placeholder="search"></div>
+<table class="table" id="food-table"><thead><tr><th>Food</th><th>Serving</th><th>Carbs</th><th>Fat</th><th>Protein</th><th>Source</th><th>Eaten</th><th>Green</th><th>Median peak</th></tr></thead><tbody></tbody></table>
+<details><summary>Add a food manually</summary>
+<form id="food-form" class="inline-form">
+  <input name="name" placeholder="name" required><input name="serving_desc" placeholder="serving, e.g. 1 slice">
+  <input name="carbs_g" type="number" step="0.1" placeholder="carbs g"><input name="fat_g" type="number" step="0.1" placeholder="fat g">
+  <input name="protein_g" type="number" step="0.1" placeholder="protein g"><input name="fiber_g" type="number" step="0.1" placeholder="fiber g">
+  <button>Save</button></form></details>
+</section>
+{% endblock %}
+{% block scripts %}<script>HV.foods();</script>{% endblock %}
