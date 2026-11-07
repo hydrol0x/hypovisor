@@ -42,6 +42,7 @@ Exports contain local times without a timezone, so `HYPOVISOR_TIMEZONE` must be 
 | Per-food cards | What has worked: outcomes grouped by bolus size and pre-bolus lead, with overlaid response curves. |
 | Insights | AGP-style hourly profile, day of week, overnight / dawn rise, meal outcomes by slot, observed ISF from correction boluses, observed carb ratio per slot, fasting drift by hour (autotune-lite), TIR by site / sensor age. |
 | Import / sync | Clarity CSV, Tandem Source export, Nightscout API v3 pull (works with tconnectsync), Dexcom Developer API v3 (OAuth, ~1 h delayed). All imports are idempotent. |
+| Forecast | 30 and 60 minute glucose forecast from the latest CGM window plus insulin/carb physiology, trained on your own history (LightGBM). Shown on the dashboard with its validation error. Chosen by benchmarking 15 model families on OhioT1DM; see `docs/research/02-glucose-forecasting-benchmark.md`. |
 
 ## Layout
 
@@ -66,6 +67,19 @@ with a strict JSON schema (`hypovisor/food/schemas.py`), passing the photo, your
 saved foods as context. Published evaluations show photo-based carb estimates are the weakest macro, so the
 UI shows ranges and confidence and makes correction one tap. Reference lookups: USDA FoodData Central
 (`USDA_FDC_API_KEY`) and Open Food Facts barcodes (`/api/reference/barcode/{code}`).
+
+## Forecasting
+
+```bash
+pip install -e ".[forecast]"
+hypovisor forecast evaluate      # chronological holdout on your data, RMSE vs persistence
+hypovisor forecast train         # saves data/forecast_model.json; dashboard and GET /api/forecast use it
+```
+
+On OhioT1DM (12 people, standard protocol) the shipped model scores 18.4 / 30.7 mg/dL RMSE at 30 / 60 minutes
+trained per person, and 17.9 / 29.8 pooled across people, versus 23.3 / 38.1 for repeating the last value. To
+reproduce with your own copy of the dataset: `python scripts/benchmark_ohio.py /path/to/OhioT1DM --mode population --pid`.
+The forecast is informational; it is not a dosing aid.
 
 ## Sync options
 

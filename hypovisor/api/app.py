@@ -10,7 +10,16 @@ from fastapi.staticfiles import StaticFiles
 
 from ..config import settings
 from ..db import init_db
-from . import routes_data, routes_foods, routes_import, routes_insights, routes_meals, routes_sync, routes_web
+from . import (
+    routes_data,
+    routes_foods,
+    routes_forecast,
+    routes_import,
+    routes_insights,
+    routes_meals,
+    routes_sync,
+    routes_web,
+)
 
 WEB_DIR = Path(__file__).resolve().parent.parent / "web"
 
@@ -36,6 +45,7 @@ def create_app() -> FastAPI:
         routes_foods,
         routes_insights,
         routes_sync,
+        routes_forecast,
         routes_web,
     ):
         app.include_router(r.router)

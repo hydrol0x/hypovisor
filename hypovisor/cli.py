@@ -108,6 +108,23 @@ def cmd_recompute(_):
         print("recomputed", recompute_all(s), "meal responses")
 
 
+def cmd_forecast(args):
+    init_db()
+    from .forecast.model import GlucoseForecaster, evaluate_holdout
+
+    with session_scope() as s:
+        if args.action == "train":
+            m = GlucoseForecaster()
+            meta = m.fit_from_db(s, days=args.days)
+            print("saved", m.save())
+            print(meta)
+        elif args.action == "evaluate":
+            print(evaluate_holdout(s, days=args.days))
+        else:
+            m = GlucoseForecaster.load()
+            print(m.predict_latest(s) if m else "no trained model; run: hypovisor forecast train")
+
+
 def cmd_serve(args):
     import uvicorn
 
@@ -133,6 +150,10 @@ def main(argv=None):
     sp.add_argument("--load", action="store_true", help="also import into the configured database")
     sp.set_defaults(fn=cmd_synth)
     sub.add_parser("recompute").set_defaults(fn=cmd_recompute)
+    fp = sub.add_parser("forecast", help="train / evaluate / predict the 30-60 min glucose forecaster")
+    fp.add_argument("action", choices=["train", "evaluate", "predict"])
+    fp.add_argument("--days", type=int, default=120)
+    fp.set_defaults(fn=cmd_forecast)
     sv = sub.add_parser("serve")
     sv.add_argument("--host", default="0.0.0.0")
     sv.add_argument("--port", type=int, default=8000)

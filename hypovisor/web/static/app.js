@@ -80,6 +80,11 @@ const HV = (() => {
       $('#latest-ts').textContent = s.latest ? new Date(s.latest.ts + 'Z').toLocaleString() : 'no data yet';
       $('#iob').textContent = fmt(s.iob_now, 2) + ' u';
     }).catch(() => render());
+    api('/api/forecast').then(f => {
+      if (!f.available) { $('#forecast-sub').textContent = f.reason; return; }
+      $('#forecast').textContent = `${fmt(f.forecast['30min'])} / ${fmt(f.forecast['60min'])}`;
+      const r = f.expected_rmse; $('#forecast-sub').textContent = `from ${fmt(f.last_value)} ${fmt(f.age_minutes)} min ago${r ? ` · typical error ±${fmt(r['30min'])} / ±${fmt(r['60min'])}` : ''}`;
+    }).catch(() => {});
     api('/api/metrics/daily?days=14').then(d => {
       new Chart($('#daily-chart'), { type: 'bar', data: { labels: d.days.map(x => x.date.slice(5)), datasets: [
         { label: 'TIR %', data: d.days.map(x => x.tir), backgroundColor: '#5ad1a8' }, { label: 'Low %', data: d.days.map(x => x.tbr), backgroundColor: '#ef6b73' }, { label: 'High %', data: d.days.map(x => x.tar), backgroundColor: '#f2c14e' }] },
