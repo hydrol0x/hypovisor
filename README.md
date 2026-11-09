@@ -24,6 +24,7 @@ Then import your real exports from the **Import** page (or the CLI):
 ```bash
 hypovisor import clarity ~/Downloads/Clarity_Export_....csv
 hypovisor import tandem  ~/Downloads/Tandem_Source_Export.zip
+hypovisor import nightscout-json ~/nightscout-backup/     # entries*.json(.gz) + treatments*.json(.gz)
 ```
 
 - **Dexcom Clarity**: clarity.dexcom.com → Reports → export icon. Any language, comma or semicolon separated.
@@ -77,8 +78,10 @@ hypovisor forecast train         # saves data/forecast_model.json; dashboard and
 ```
 
 On OhioT1DM (12 people, standard protocol) the shipped model scores 18.4 / 30.7 mg/dL RMSE at 30 / 60 minutes
-trained per person, and 17.9 / 29.8 pooled across people, versus 23.3 / 38.1 for repeating the last value. To
-reproduce with your own copy of the dataset: `python scripts/benchmark_ohio.py /path/to/OhioT1DM --mode population --pid`.
+trained per person, and 17.9 / 29.8 pooled across people, versus 23.3 / 38.1 for repeating the last value. On 39
+OpenAPS Data Commons donors (90 days each) it scores 19.1 / 30.3 per person versus 23.7 / 37.0 for persistence.
+To reproduce with your own copies: `python scripts/benchmark_ohio.py /path/to/OhioT1DM --mode population --pid`
+or `python scripts/benchmark_ohio.py /path/to/openaps --dataset openaps`.
 The forecast is informational; it is not a dosing aid.
 
 ## Sync options

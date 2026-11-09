@@ -90,3 +90,44 @@ def test_merged_cgm_prefers_clarity(session, synth_dir):
     s = load_series(session, lo, hi)
     # Tandem relays the same readings 11 s later; merge must not double count
     assert len(s) < total * 0.6
+
+
+def test_nightscout_json_files(session, tmp_path):
+    import json
+
+    from hypovisor.importers.nightscout import import_nightscout_files
+
+    entries = [
+        {"_id": "a", "date": 1533427130000, "sgv": 150, "type": "sgv", "device": "xDrip"},
+        {"_id": "b", "date": 1533427430000, "sgv": 155, "type": "sgv"},
+        {"_id": "c", "date": 1533427730000, "sgv": "bad", "type": "sgv"},
+    ]
+    treatments = [
+        {
+            "_id": "t1",
+            "created_at": "2018-08-04T23:01:08Z",
+            "eventType": "Correction Bolus",
+            "insulin": 1.5,
+            "carbs": None,
+        },
+        {"_id": "t2", "date": 1533426425552, "eventType": "Carb Correction", "carbs": 17, "insulin": None},
+        {
+            "_id": "t3",
+            "date": 1533426000000,
+            "eventType": "Temp Basal",
+            "rate": 0.3,
+            "duration": 30,
+            "enteredBy": "openaps",
+        },
+        {"_id": "t4", "date": 1533426100000, "eventType": "Meal Bolus", "insulin": 4, "carbs": 40},
+        {"_id": "t5", "date": 1533426200000, "eventType": "Site Change", "notes": "left"},
+    ]
+    (tmp_path / "entries.json").write_text(json.dumps(entries))
+    (tmp_path / "treatments.json").write_text(json.dumps(treatments))
+    r = import_nightscout_files(session, [tmp_path / "entries.json", tmp_path / "treatments.json"])
+    assert r.glucose_added == 2 and r.bolus_added == 2 and r.basal_added == 1 and r.events_added == 2
+    b = {x.reason: x for x in session.scalars(select(Bolus))}
+    assert b["correction"].units_total == 1.5 and b["food"].carbs_entered == 40
+    d = session.scalars(select(BasalDose)).one()
+    assert d.rate_uph == 0.3 and d.units == 0.15 and d.is_temp
+    assert {e.kind for e in session.scalars(select(PumpEvent))} == {"carbs_logged", "site_change"}

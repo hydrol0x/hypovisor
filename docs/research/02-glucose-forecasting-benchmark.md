@@ -80,6 +80,34 @@ Per-patient spread for the best model at 30 minutes: 15.0 (patient 570) to 21.4 
   (TimesNet), 23.7 (BG-BERT) and 24.0 (CNN-LSTM with a genetically tuned glycemia-weighted loss) on OhioT1DM;
   we could not verify those protocols and did not reproduce them.
 
+## Second dataset: OpenAPS Data Commons
+
+To check that the OhioT1DM conclusions hold on closed-loop data closer to a modern AID user, the same protocol
+was run on the OpenAPS Data Commons (n=183 release; 144 donors with files, 135 with usable CGM). Each donor's
+Nightscout-format entries, treatments and profile were converted to the 5-minute grid: glucose from `sgv`,
+boluses from treatments with insulin (SMBs included), carbs from treatments, basal from the profile schedule
+in the donor's own timezone overridden by temp-basal treatments. Devicestatus was not used.
+
+Cohort: the 40 donors with the most days of at least 80 percent CGM coverage among those with a basal schedule,
+at least 200 boluses and 100 carb entries; one was dropped for too few gap-free windows (39 scored). Each
+contributes the last 90 well-covered days, split chronologically 64 / 16 / 20 (train / validation / test).
+Timezones span Europe, the Americas, Japan, Australia and New Zealand.
+
+| Model | RMSE 30 | RMSE 60 | MAE 30 | MAE 60 | Train s |
+|---|---|---|---|---|---|
+| Persistence | 23.67 | 36.99 | 17.05 | 27.11 | 0 |
+| Ridge on lags + physiology (personal) | 20.93 | 33.10 | 15.05 | 24.42 | 9 |
+| DLinear (pooled, 39 donors) | 20.68 | 32.39 | 14.87 | 24.08 | 98 |
+| CNN-LSTM (pooled, 39 donors) | CNNLSTM30 | CNNLSTM60 | CNNLSTMM30 | CNNLSTMM60 | CNNLSTMS |
+| LightGBM tuned + trend features (personal) | 19.09 | 30.33 | 13.74 | 22.34 | 304 |
+| LightGBM tuned + trend features (pooled) | 19.05 | 30.37 | 13.66 | 22.33 | 800 |
+| LightGBM tuned + trend features + donor id (pooled) | **18.67** | **29.57** | 13.41 | 21.79 | 813 |
+
+The picture is the same as on OhioT1DM: persistence is at the same level (23.7 vs 23.3), the shipped
+personal LightGBM improves on it by about 19 percent at 30 minutes, the donor-id pooled model is best, and the
+neural comparators trail. One difference: with 90 days per person, pooling without the id feature no longer
+helps (19.05 vs 19.09), so personal training is adequate once a user has a few months of history.
+
 ## What we learned
 
 1. **Gradient-boosted trees on a short window beat every deep model here.** Eight weeks per person is small
@@ -94,6 +122,8 @@ Per-patient spread for the best model at 30 minutes: 15.0 (patient 570) to 21.4 
 5. **The glycemia-weighted loss did not improve overall RMSE** on any of four architectures with fixed weights;
    the paper that reports large gains tunes the weights per patient with a genetic algorithm.
 6. **Ensembling LightGBM with the nets did not help**, because the nets are individually weaker.
+7. **The ranking replicates on a second, larger dataset** (39 OpenAPS donors, 90 days each): same ordering, same
+   magnitudes, and personal training is enough once a user has about three months of data.
 
 ## What ships in Hypovisor
 

@@ -25,6 +25,11 @@ def cmd_import(args):
     with session_scope() as s:
         if args.kind == "clarity":
             r = import_clarity_csv(s, args.path)
+        elif args.kind == "nightscout-json":
+            from .importers.nightscout import import_nightscout_files
+
+            p = Path(args.path)
+            r = import_nightscout_files(s, sorted(p.glob("*.json*")) if p.is_dir() else [p])
         else:
             r = import_tandem_source(s, args.path)
         n = recompute_all(s)
@@ -137,7 +142,7 @@ def main(argv=None):
     sub = p.add_subparsers(dest="cmd", required=True)
     sub.add_parser("init-db").set_defaults(fn=cmd_init_db)
     ip = sub.add_parser("import", help="import a vendor export")
-    ip.add_argument("kind", choices=["clarity", "tandem"])
+    ip.add_argument("kind", choices=["clarity", "tandem", "nightscout-json"])
     ip.add_argument("path")
     ip.set_defaults(fn=cmd_import)
     mp = sub.add_parser("meals-csv", help="bulk load meals from CSV")
