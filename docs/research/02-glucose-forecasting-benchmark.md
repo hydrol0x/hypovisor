@@ -98,7 +98,7 @@ Timezones span Europe, the Americas, Japan, Australia and New Zealand.
 | Persistence | 23.67 | 36.99 | 17.05 | 27.11 | 0 |
 | Ridge on lags + physiology (personal) | 20.93 | 33.10 | 15.05 | 24.42 | 9 |
 | DLinear (pooled, 39 donors) | 20.68 | 32.39 | 14.87 | 24.08 | 98 |
-| CNN-LSTM (pooled, 39 donors) | CNNLSTM30 | CNNLSTM60 | CNNLSTMM30 | CNNLSTMM60 | CNNLSTMS |
+| CNN-LSTM (pooled, 39 donors) | 19.57 | 30.81 | 14.13 | 22.75 | 1289 |
 | LightGBM tuned + trend features (personal) | 19.09 | 30.33 | 13.74 | 22.34 | 304 |
 | LightGBM tuned + trend features (pooled) | 19.05 | 30.37 | 13.66 | 22.33 | 800 |
 | LightGBM tuned + trend features + donor id (pooled) | **18.67** | **29.57** | 13.41 | 21.79 | 813 |
